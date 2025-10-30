@@ -1,0 +1,57 @@
+import math
+
+def jump_search(arr, target):
+    """
+    Поиск скачками
+    Временная сложность: O(√n)
+    """
+    n = len(arr)
+    if n == 0:
+        return -1
+    
+    # Определяем размер прыжка (оптимально √n)
+    step = int(math.sqrt(n))
+    prev = 0
+    
+    print(f"Размер прыжка: {step}")
+    
+    # Прыжки через блоки
+    while prev < n and arr[min(step, n) - 1] < target:
+        print(f"Прыжок от {prev} до {step}")
+        prev = step
+        step += int(math.sqrt(n))
+        if prev >= n:
+            return -1
+    
+    # Линейный поиск в найденном блоке
+    print(f"Линейный поиск в диапазоне [{prev}, {min(step, n)})")
+    for i in range(prev, min(step, n)):
+        if arr[i] == target:
+            return i
+        print(f"Проверен элемент {arr[i]} на позиции {i}")
+    
+    return -1
+
+# Демонстрация работы
+if __name__ == "__main__":
+    sorted_array = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144]
+    target = 34
+    print("Поиск скачками:")
+    print(f"Массив: {sorted_array}")
+    print(f"Искомый элемент: {target}")
+    
+    result = jump_search(sorted_array, target)
+    if result != -1:
+        print(f"Элемент найден на позиции: {result}")
+    else:
+        print("Элемент не найден")
+#Результат:
+#Поиск скачками:
+#Массив: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144]
+#Искомый элемент: 34
+#Размер прыжка: 3
+#Прыжок от 0 до 3
+#Прыжок от 3 до 6
+#Прыжок от 6 до 9
+#Линейный поиск в диапазоне [9, 12)
+#Элемент найден на позиции: 9
