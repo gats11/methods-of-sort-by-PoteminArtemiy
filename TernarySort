@@ -1,0 +1,67 @@
+def ternary_search(arr, target):
+    """
+    Тернарный поиск
+    Временная сложность: O(log₃ n)
+    """
+    def recursive_ternary(low, high, depth=0):
+        indent = "  " * depth
+        print(f"{indent}Диапазон [{low}, {high}]")
+        
+        if high >= low:
+            # Делим на три части
+            mid1 = low + (high - low) // 3
+            mid2 = high - (high - low) // 3
+            
+            print(f"{indent}Точки деления: mid1={mid1}, mid2={mid2}")
+            print(f"{indent}Элементы: arr[{mid1}]={arr[mid1]}, arr[{mid2}]={arr[mid2]}")
+            
+            # Проверяем граничные точки
+            if arr[mid1] == target:
+                print(f"{indent}Найден на позиции {mid1}")
+                return mid1
+            if arr[mid2] == target:
+                print(f"{indent}Найден на позиции {mid2}")
+                return mid2
+            
+            # Определяем в какой трети продолжать поиск
+            if target < arr[mid1]:
+                print(f"{indent}Ищем в левой трети [{low}, {mid1-1}]")
+                return recursive_ternary(low, mid1 - 1, depth + 1)
+            elif target > arr[mid2]:
+                print(f"{indent}Ищем в правой трети [{mid2+1}, {high}]")
+                return recursive_ternary(mid2 + 1, high, depth + 1)
+            else:
+                print(f"{indent}Ищем в средней трети [{mid1+1}, {mid2-1}]")
+                return recursive_ternary(mid1 + 1, mid2 - 1, depth + 1)
+        
+        print(f"{indent}Элемент не найден")
+        return -1
+    
+    return recursive_ternary(0, len(arr) - 1)
+
+# Демонстрация работы
+if __name__ == "__main__":
+    sorted_array = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21]
+    target = 13
+    print("Тернарный поиск:")
+    print(f"Массив: {sorted_array}")
+    print(f"Искомый элемент: {target}")
+    
+    result = ternary_search(sorted_array, target)
+    if result != -1:
+        print(f"Элемент найден на позиции: {result}")
+    else:
+        print("Элемент не найден")
+#Результат:
+#Тернарный поиск:
+#Массив: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21]
+#Искомый элемент: 13
+#Диапазон [0, 10]
+#Точки деления: mid1=3, mid2=7
+#Элементы: arr[3]=7, arr[7]=15
+#Ищем в средней трети [4, 6]
+#  Диапазон [4, 6]
+#  Точки деления: mid1=4, mid2=6
+#  Элементы: arr[4]=9, arr[6]=13
+#  Найден на позиции 6
+#Элемент найден на позиции: 6
