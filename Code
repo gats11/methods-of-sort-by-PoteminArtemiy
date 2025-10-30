@@ -1,1 +1,411 @@
+#ExponentialSearch
+def exponential_search(arr, target):
+    """
+    Экспоненциальный поиск
+    Временная сложность: O(log n)
+    """
+    n = len(arr)
+    if n == 0:
+        return -1
+    
+    # Проверяем первый элемент
+    if arr[0] == target:
+        return 0
+    
+    # Экспоненциально расширяем диапазон
+    i = 1
+    print("Экспоненциальное расширение диапазона:")
+    while i < n and arr[i] <= target:
+        print(f"Граница расширена до индекса {i} (элемент {arr[i]})")
+        i *= 2
+    
+    # Бинарный поиск в найденном диапазоне
+    low = i // 2
+    high = min(i, n - 1)
+    print(f"Бинарный поиск в диапазоне [{low}, {high}]")
+    
+    return binary_search(arr, target, low, high)
 
+def binary_search(arr, target, low, high):
+    """Вспомогательная функция: бинарный поиск"""
+    while low <= high:
+        mid = (low + high) // 2
+        print(f"Проверка элемента {arr[mid]} на позиции {mid}")
+        
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            low = mid + 1
+        else:
+            high = mid - 1
+    return -1
+
+# Демонстрация работы
+if __name__ == "__main__":
+    sorted_array = [2, 5, 8, 12, 16, 23, 38, 45, 67, 89, 91]
+    target = 23
+    print("Экспоненциальный поиск:")
+    print(f"Массив: {sorted_array}")
+    print(f"Искомый элемент: {target}")
+    
+    result = exponential_search(sorted_array, target)
+    if result != -1:
+        print(f"Элемент найден на позиции: {result}")
+    else:
+        print("Элемент не найден")
+"""
+Результат:
+Экспоненциальный поиск:
+Массив: [2, 5, 8, 12, 16, 23, 38, 45, 67, 89, 91]
+Искомый элемент: 23
+Экспоненциальное расширение диапазона:
+Граница расширена до индекса 1 (элемент 5)
+Граница расширена до индекса 2 (элемент 8)
+Граница расширена до индекса 4 (элемент 16)
+Бинарный поиск в диапазоне [4, 8]
+Проверка элемента 38 на позиции 6
+Проверка элемента 16 на позиции 4
+Проверка элемента 23 на позиции 5
+Элемент найден на позиции: 5
+"""
+
+
+
+#jumpSearch
+
+
+
+import math
+
+def jump_search(arr, target):
+    """
+    Поиск скачками
+    Временная сложность: O(√n)
+    """
+    n = len(arr)
+    if n == 0:
+        return -1
+    
+    # Определяем размер прыжка (оптимально √n)
+    step = int(math.sqrt(n))
+    prev = 0
+    
+    print(f"Размер прыжка: {step}")
+    
+    # Прыжки через блоки
+    while prev < n and arr[min(step, n) - 1] < target:
+        print(f"Прыжок от {prev} до {step}")
+        prev = step
+        step += int(math.sqrt(n))
+        if prev >= n:
+            return -1
+    
+    # Линейный поиск в найденном блоке
+    print(f"Линейный поиск в диапазоне [{prev}, {min(step, n)})")
+    for i in range(prev, min(step, n)):
+        if arr[i] == target:
+            return i
+        print(f"Проверен элемент {arr[i]} на позиции {i}")
+    
+    return -1
+
+# Демонстрация работы
+if __name__ == "__main__":
+    sorted_array = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144]
+    target = 34
+    print("Поиск скачками:")
+    print(f"Массив: {sorted_array}")
+    print(f"Искомый элемент: {target}")
+    
+    result = jump_search(sorted_array, target)
+    if result != -1:
+        print(f"Элемент найден на позиции: {result}")
+    else:
+        print("Элемент не найден")
+"""
+Результат:
+Поиск скачками:
+Массив: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144]
+Искомый элемент: 34
+Размер прыжка: 3
+Прыжок от 0 до 3
+Прыжок от 3 до 6
+Прыжок от 6 до 9
+Линейный поиск в диапазоне [9, 12)
+Элемент найден на позиции: 9
+"""
+
+
+#TernarySearch
+
+
+
+def ternary_search(arr, target):
+    """
+    Тернарный поиск
+    Временная сложность: O(log₃ n)
+    """
+    def recursive_ternary(low, high, depth=0):
+        indent = "  " * depth
+        print(f"{indent}Диапазон [{low}, {high}]")
+        
+        if high >= low:
+            # Делим на три части
+            mid1 = low + (high - low) // 3
+            mid2 = high - (high - low) // 3
+            
+            print(f"{indent}Точки деления: mid1={mid1}, mid2={mid2}")
+            print(f"{indent}Элементы: arr[{mid1}]={arr[mid1]}, arr[{mid2}]={arr[mid2]}")
+            
+            # Проверяем граничные точки
+            if arr[mid1] == target:
+                print(f"{indent}Найден на позиции {mid1}")
+                return mid1
+            if arr[mid2] == target:
+                print(f"{indent}Найден на позиции {mid2}")
+                return mid2
+            
+            # Определяем в какой трети продолжать поиск
+            if target < arr[mid1]:
+                print(f"{indent}Ищем в левой трети [{low}, {mid1-1}]")
+                return recursive_ternary(low, mid1 - 1, depth + 1)
+            elif target > arr[mid2]:
+                print(f"{indent}Ищем в правой трети [{mid2+1}, {high}]")
+                return recursive_ternary(mid2 + 1, high, depth + 1)
+            else:
+                print(f"{indent}Ищем в средней трети [{mid1+1}, {mid2-1}]")
+                return recursive_ternary(mid1 + 1, mid2 - 1, depth + 1)
+        
+        print(f"{indent}Элемент не найден")
+        return -1
+    
+    return recursive_ternary(0, len(arr) - 1)
+
+# Демонстрация работы
+if __name__ == "__main__":
+    sorted_array = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21]
+    target = 13
+    print("Тернарный поиск:")
+    print(f"Массив: {sorted_array}")
+    print(f"Искомый элемент: {target}")
+    
+    result = ternary_search(sorted_array, target)
+    if result != -1:
+        print(f"Элемент найден на позиции: {result}")
+    else:
+        print("Элемент не найден")
+"""
+Результат:
+Тернарный поиск:
+Массив: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21]
+Искомый элемент: 13
+Диапазон [0, 10]
+Точки деления: mid1=3, mid2=7
+Элементы: arr[3]=7, arr[7]=15
+Ищем в средней трети [4, 6]
+  Диапазон [4, 6]
+  Точки деления: mid1=4, mid2=6
+  Элементы: arr[4]=9, arr[6]=13
+  Найден на позиции 6
+Элемент найден на позиции: 6
+"""
+
+
+
+#BacketSort
+
+
+
+def bucket_sort(arr):
+    """
+    Блочная (корзинная) сортировка
+    Временная сложность: O(n + k) в лучшем случае
+    """
+    if len(arr) == 0:
+        return arr
+    
+    # Определяем количество корзин
+    num_buckets = len(arr)
+    min_val, max_val = min(arr), max(arr)
+    
+    # Если все элементы одинаковые, возвращаем исходный массив
+    if min_val == max_val:
+        return arr
+    
+    bucket_range = (max_val - min_val) / num_buckets
+    
+    # Создаем корзины
+    buckets = [[] for _ in range(num_buckets)]
+    
+    # Распределяем элементы по корзинам
+    for num in arr:
+        index = int((num - min_val) / bucket_range)
+        if index == num_buckets:  # Обработка граничного случая
+            index -= 1
+        buckets[index].append(num)
+    
+    # Сортируем каждую корзину и объединяем
+    result = []
+    for bucket in buckets:
+        # Используем сортировку вставками для небольших корзин
+        insertion_sort(bucket)
+        result.extend(bucket)
+    
+    return result
+
+def insertion_sort(arr):
+    """Вспомогательная функция: сортировка вставками"""
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        while j >= 0 and arr[j] > key:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key
+
+# Демонстрация работы
+if __name__ == "__main__":
+    test_array = [0.42, 0.32, 0.33, 0.52, 0.37, 0.47, 0.51]
+    print("Блочная сортировка:")
+    print(f"Исходный массив: {test_array}")
+    sorted_array = bucket_sort(test_array)
+    print(f"Отсортированный массив: {sorted_array}")
+"""
+Результат:
+Блочная сортировка:
+Исходный массив: [0.42, 0.32, 0.33, 0.52, 0.37, 0.47, 0.51]
+Отсортированный массив: [0.32, 0.33, 0.37, 0.42, 0.47, 0.51, 0.52]
+"""
+
+
+
+#BeadSort
+
+
+
+def bead_sort(arr):
+    """
+    Сортировка бусинами (гравитационная)
+    Временная сложность: O(n) теоретически, O(S) практически
+    Только для неотрицательных целых чисел
+    """
+    if not arr:
+        return []
+    
+    # Проверяем, что все элементы неотрицательные целые
+    if any(not isinstance(x, int) or x < 0 for x in arr):
+        raise ValueError("Сортировка бусинами работает только с неотрицательными целыми числами")
+    
+    # Находим максимальное значение
+    max_val = max(arr)
+    
+    # Создаем "абак" - матрицу бусин
+    abacus = [[0] * len(arr) for _ in range(max_val)]
+    
+    # Размещаем бусины (1 - есть бусина, 0 - нет бусины)
+    for i, num in enumerate(arr):
+        for j in range(num):
+            abacus[j][i] = 1
+    
+    print("Абак до гравитации:")
+    for row in abacus:
+        print(row)
+    
+    # Симулируем гравитацию - бусины падают вниз
+    for col in range(len(arr)):
+        # Считаем количество бусин в столбце
+        beads_count = sum(1 for row in range(max_val) if abacus[row][col] == 1)
+        
+        # Перераспределяем бусины (все падают вниз)
+        for row in range(max_val):
+            abacus[row][col] = 1 if row < beads_count else 0
+    
+    print("Абак после гравитации:")
+    for row in abacus:
+        print(row)
+    
+    # Считываем результат (количество бусин в каждом столбце)
+    result = []
+    for col in range(len(arr)):
+        result.append(sum(1 for row in range(max_val) if abacus[row][col] == 1))
+    
+    return result
+
+# Демонстрация работы
+if __name__ == "__main__":
+    test_array = [3, 1, 4, 1, 2]
+    print("Сортировка бусинами:")
+    print(f"Исходный массив: {test_array}")
+    sorted_array = bead_sort(test_array)
+    print(f"Отсортированный массив: {sorted_array}")
+"""
+Результат:
+Сортировка бусинами:
+Исходный массив: [3, 1, 4, 1, 2]
+Абак до гравитации:
+[1, 1, 1, 1, 1]
+[1, 0, 1, 0, 1]
+[1, 0, 1, 0, 0]
+[0, 0, 1, 0, 0]
+Абак после гравитации:
+[1, 1, 1, 1, 1]
+[1, 0, 1, 0, 1]
+[1, 0, 1, 0, 0]
+[0, 0, 1, 0, 0]
+Отсортированный массив: [3, 1, 4, 1, 2]
+"""
+
+
+
+#PancakeSort
+
+
+
+def pancake_sort(arr):
+    """
+    Блинная сортировка
+    Временная сложность: O(n²)
+    """
+    def flip(subarray, k):
+        """Переворачивает подмассив до индекса k"""
+        i = 0
+        while i < k:
+            subarray[i], subarray[k] = subarray[k], subarray[i]
+            i += 1
+            k -= 1
+    
+    n = len(arr)
+    for size in range(n, 1, -1):
+        # Находим индекс максимального элемента в текущей части
+        max_idx = arr.index(max(arr[:size]))
+        
+        # Если максимум не на своем месте, выполняем перевороты
+        if max_idx != size - 1:
+            # Переворачиваем до максимума, если он не в начале
+            if max_idx != 0:
+                print(f"Переворот до максимума: flip(arr, {max_idx})")
+                flip(arr, max_idx)
+            
+            # Переворачиваем всю текущую часть
+            print(f"Переворот всей части: flip(arr, {size-1})")
+            flip(arr, size - 1)
+    
+    return arr
+
+# Демонстрация работы
+if __name__ == "__main__":
+    test_array = [3, 1, 4, 2, 5]
+    print("Блинная сортировка:")
+    print(f"Исходный массив: {test_array}")
+    sorted_array = pancake_sort(test_array.copy())
+    print(f"Отсортированный массив: {sorted_array}")
+"""
+Результат:
+Блинная сортировка:
+Исходный массив: [3, 1, 4, 2, 5]
+Переворот до максимума: flip(arr, 2)
+Переворот всей части: flip(arr, 3)
+Переворот до максимума: flip(arr, 1)
+Переворот всей части: flip(arr, 2)
+Отсортированный массив: [1, 2, 3, 4, 5]
+"""
