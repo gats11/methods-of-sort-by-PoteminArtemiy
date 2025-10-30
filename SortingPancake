@@ -1,0 +1,46 @@
+def pancake_sort(arr):
+    """
+    Блинная сортировка
+    Временная сложность: O(n²)
+    """
+    def flip(subarray, k):
+        """Переворачивает подмассив до индекса k"""
+        i = 0
+        while i < k:
+            subarray[i], subarray[k] = subarray[k], subarray[i]
+            i += 1
+            k -= 1
+    
+    n = len(arr)
+    for size in range(n, 1, -1):
+        # Находим индекс максимального элемента в текущей части
+        max_idx = arr.index(max(arr[:size]))
+        
+        # Если максимум не на своем месте, выполняем перевороты
+        if max_idx != size - 1:
+            # Переворачиваем до максимума, если он не в начале
+            if max_idx != 0:
+                print(f"Переворот до максимума: flip(arr, {max_idx})")
+                flip(arr, max_idx)
+            
+            # Переворачиваем всю текущую часть
+            print(f"Переворот всей части: flip(arr, {size-1})")
+            flip(arr, size - 1)
+    
+    return arr
+
+# Демонстрация работы
+if __name__ == "__main__":
+    test_array = [3, 1, 4, 2, 5]
+    print("Блинная сортировка:")
+    print(f"Исходный массив: {test_array}")
+    sorted_array = pancake_sort(test_array.copy())
+    print(f"Отсортированный массив: {sorted_array}")
+#Результат:
+#Блинная сортировка:
+#Исходный массив: [3, 1, 4, 2, 5]
+#Переворот до максимума: flip(arr, 2)
+#Переворот всей части: flip(arr, 3)
+#Переворот до максимума: flip(arr, 1)
+#Переворот всей части: flip(arr, 2)
+#Отсортированный массив: [1, 2, 3, 4, 5]
